@@ -185,6 +185,7 @@ class clsDashboardWindow(QMainWindow):
         self.inst_pressure = []        
         self.inst_temperature = []
         self.inst_height = []
+        self.inst_numsat = []
         self.inst_latitude = []
         self.inst_longitude = []
         self.inst_altitude = []
@@ -213,12 +214,15 @@ class clsDashboardWindow(QMainWindow):
         self.close()
     
     def mthDisplay(self):
+        # Locking thread
         self.inst_mutex.acquire()
 
+        # Creating timer thread for getting data from inst_queueDashboard and plotting/displaying it
         self.inst_timerplot = threading.Timer(1.0, self.mthDisplay)
         self.inst_timerplot.start()
 
         try:
+            # Getting data from inst_queueDashboard
             for _ in range(0, self.inst_queueDashboard.qsize()):
                 dataframe = self.inst_queueDashboard.get()
                 self.inst_pcknum.append(dataframe[0])
@@ -229,12 +233,15 @@ class clsDashboardWindow(QMainWindow):
                 self.inst_pressure.append(dataframe[5])
                 self.inst_temperature.append(dataframe[6])
                 self.inst_height.append(dataframe[7])
-                self.inst_latitude.append(dataframe[8])
-                self.inst_longitude.append(dataframe[9])
-                self.inst_altitude.append(dataframe[10])
-                self.inst_rotorspeed.append(dataframe[11])
-                self.inst_state.append(dataframe[12])
+                self.inst_numsat.append(dataframe[8])
+                self.inst_latitude.append(dataframe[9])
+                self.inst_longitude.append(dataframe[10])
+                self.inst_altitude.append(dataframe[11])
+                self.inst_rotorspeed.append(dataframe[12])
+                self.inst_state.append(dataframe[13])
 
+            # Displaying values in LineEdits
+            self.uiclsDashboardWindow.lineEdit_dataframe.setText(str(dataframe))
             self.uiclsDashboardWindow.lineEdit_pcknum.setText(str(self.inst_pcknum[-1]))
             self.uiclsDashboardWindow.lineEdit_timemission.setText(str(self.inst_missiontime[-1]))
             self.uiclsDashboardWindow.lineEdit_pitch.setText(str(self.inst_pitch[-1]))
@@ -243,6 +250,7 @@ class clsDashboardWindow(QMainWindow):
             self.uiclsDashboardWindow.lineEdit_pressure.setText(str(self.inst_pressure[-1]))
             self.uiclsDashboardWindow.lineEdit_temperature.setText(str(self.inst_temperature[-1]))                        
             self.uiclsDashboardWindow.lineEdit_height.setText(str(self.inst_height[-1]))
+            self.uiclsDashboardWindow.lineEdit_numsat.setText(str(self.inst_numsat[-1]))
             self.uiclsDashboardWindow.lineEdit_latitude.setText(str(self.inst_latitude[-1]))
             self.uiclsDashboardWindow.lineEdit_longitude.setText(str(self.inst_longitude[-1]))
             self.uiclsDashboardWindow.lineEdit_altitude.setText(str(self.inst_altitude[-1]))
@@ -277,8 +285,8 @@ def ProcessProducer(argdef_queueProducer, argdef_COM):
             line = ser.readline().decode('UTF-8')
             splitline = line.split(',')
 
-            if len(splitline) == 13:
-                splitline[12] = splitline[12].strip('\n')
+            if len(splitline) == 14:
+                splitline[13] = splitline[13].strip('\n')
                 numframe = list(map(float,splitline))                
                 argdef_queueProducer.put(numframe)
                 print("Put: " + str(numframe))
