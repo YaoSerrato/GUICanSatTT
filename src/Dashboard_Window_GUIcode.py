@@ -88,6 +88,10 @@ class Ui_Window_Dashboard(object):
         # lineEdit_pcknum
         self.lineEdit_pcknum = QtWidgets.QLineEdit(self.groupBox_infomission)
         self.lineEdit_pcknum.setGeometry(QtCore.QRect(190, 30, 113, 20))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(False)
+        self.lineEdit_pcknum.setFont(font)
         self.lineEdit_pcknum.setReadOnly(True)
         self.lineEdit_pcknum.setObjectName("lineEdit_pcknum")
 
@@ -101,10 +105,18 @@ class Ui_Window_Dashboard(object):
         font.setWeight(50)
         self.label_timemission.setFont(font)
         self.label_timemission.setObjectName("label_timemission")
+
+        # lineEdit_timemission
         self.lineEdit_timemission = QtWidgets.QLineEdit(self.groupBox_infomission)
         self.lineEdit_timemission.setGeometry(QtCore.QRect(480, 30, 113, 20))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(False)
+        self.lineEdit_timemission.setFont(font)
         self.lineEdit_timemission.setReadOnly(True)
         self.lineEdit_timemission.setObjectName("lineEdit_timemission")
+
+        # label_state
         self.label_state = QtWidgets.QLabel(self.groupBox_infomission)
         self.label_state.setGeometry(QtCore.QRect(610, 30, 71, 16))
         font = QtGui.QFont()
@@ -114,60 +126,67 @@ class Ui_Window_Dashboard(object):
         font.setWeight(50)
         self.label_state.setFont(font)
         self.label_state.setObjectName("label_state")
+
+        # lineEdit_state_wait
         self.lineEdit_state_wait = QtWidgets.QLineEdit(self.groupBox_infomission)
         self.lineEdit_state_wait.setGeometry(QtCore.QRect(680, 30, 113, 20))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
-        font.setWeight(50)
         self.lineEdit_state_wait.setFont(font)
         self.lineEdit_state_wait.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_state_wait.setReadOnly(True)
         self.lineEdit_state_wait.setObjectName("lineEdit_state_wait")
+
+        # lineEdit_state_ascent
         self.lineEdit_state_ascent = QtWidgets.QLineEdit(self.groupBox_infomission)
         self.lineEdit_state_ascent.setGeometry(QtCore.QRect(800, 30, 113, 20))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
         font.setBold(False)
-        font.setWeight(50)
         self.lineEdit_state_ascent.setFont(font)
         self.lineEdit_state_ascent.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_state_ascent.setReadOnly(True)
         self.lineEdit_state_ascent.setObjectName("lineEdit_state_ascent")
+
+        # lineEdit_state_parachute
         self.lineEdit_state_parachute = QtWidgets.QLineEdit(self.groupBox_infomission)
         self.lineEdit_state_parachute.setGeometry(QtCore.QRect(920, 30, 113, 20))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
         font.setBold(False)
-        font.setWeight(50)
         self.lineEdit_state_parachute.setFont(font)
         self.lineEdit_state_parachute.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_state_parachute.setReadOnly(True)
         self.lineEdit_state_parachute.setObjectName("lineEdit_state_parachute")
+
+        # lineEdit_state_autorrotation
         self.lineEdit_state_autorrotation = QtWidgets.QLineEdit(self.groupBox_infomission)
         self.lineEdit_state_autorrotation.setGeometry(QtCore.QRect(1040, 30, 151, 20))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
         font.setBold(False)
-        font.setWeight(50)
         self.lineEdit_state_autorrotation.setFont(font)
         self.lineEdit_state_autorrotation.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_state_autorrotation.setReadOnly(True)
         self.lineEdit_state_autorrotation.setObjectName("lineEdit_state_autorrotation")
+
+        # lineEdit_state_landing
         self.lineEdit_state_landing = QtWidgets.QLineEdit(self.groupBox_infomission)
         self.lineEdit_state_landing.setGeometry(QtCore.QRect(1200, 30, 113, 20))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
         font.setBold(False)
-        font.setWeight(50)
         self.lineEdit_state_landing.setFont(font)
         self.lineEdit_state_landing.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit_state_landing.setReadOnly(True)
         self.lineEdit_state_landing.setObjectName("lineEdit_state_landing")
+
+        # label_dataframe
         self.label_dataframe = QtWidgets.QLabel(self.groupBox_infomission)
         self.label_dataframe.setGeometry(QtCore.QRect(10, 70, 141, 16))
         font = QtGui.QFont()
@@ -177,10 +196,18 @@ class Ui_Window_Dashboard(object):
         font.setWeight(50)
         self.label_dataframe.setFont(font)
         self.label_dataframe.setObjectName("label_dataframe")
+
+        # lineEdit_dataframe
         self.lineEdit_dataframe = QtWidgets.QLineEdit(self.groupBox_infomission)
         self.lineEdit_dataframe.setGeometry(QtCore.QRect(150, 70, 1161, 20))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(False)
+        self.lineEdit_dataframe.setFont(font)
         self.lineEdit_dataframe.setReadOnly(True)
         self.lineEdit_dataframe.setObjectName("lineEdit_dataframe")
+
+
         self.groupBox_GPSdata = QtWidgets.QGroupBox(self.mainframe_dashboard)
         self.groupBox_GPSdata.setGeometry(QtCore.QRect(10, 183, 360, 171))
         font = QtGui.QFont()
@@ -204,14 +231,19 @@ class Ui_Window_Dashboard(object):
         self.label_latitude.setFont(font)
         self.label_latitude.setObjectName("label_latitude")
         self.formLayout_GPSdata.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_latitude)
+
+        # lineEdit_latitude
         self.lineEdit_latitude = QtWidgets.QLineEdit(self.formLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_latitude.setFont(font)
         self.lineEdit_latitude.setText("")
         self.lineEdit_latitude.setReadOnly(True)
         self.lineEdit_latitude.setObjectName("lineEdit_latitude")
         self.formLayout_GPSdata.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lineEdit_latitude)
+
+        # label_longitude
         self.label_longitude = QtWidgets.QLabel(self.formLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -220,14 +252,19 @@ class Ui_Window_Dashboard(object):
         self.label_longitude.setFont(font)
         self.label_longitude.setObjectName("label_longitude")
         self.formLayout_GPSdata.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_longitude)
+
+        # lineEdit_longitude
         self.lineEdit_longitude = QtWidgets.QLineEdit(self.formLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_longitude.setFont(font)
         self.lineEdit_longitude.setText("")
         self.lineEdit_longitude.setReadOnly(True)
         self.lineEdit_longitude.setObjectName("lineEdit_longitude")
         self.formLayout_GPSdata.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lineEdit_longitude)
+
+        # label_altitude
         self.label_altitude = QtWidgets.QLabel(self.formLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -236,14 +273,19 @@ class Ui_Window_Dashboard(object):
         self.label_altitude.setFont(font)
         self.label_altitude.setObjectName("label_altitude")
         self.formLayout_GPSdata.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_altitude)
+
+        # lineEdit_altitude
         self.lineEdit_altitude = QtWidgets.QLineEdit(self.formLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_altitude.setFont(font)
         self.lineEdit_altitude.setText("")
         self.lineEdit_altitude.setReadOnly(True)
         self.lineEdit_altitude.setObjectName("lineEdit_altitude")
         self.formLayout_GPSdata.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lineEdit_altitude)
+
+        # label_numsat
         self.label_numsat = QtWidgets.QLabel(self.formLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -252,14 +294,19 @@ class Ui_Window_Dashboard(object):
         self.label_numsat.setFont(font)
         self.label_numsat.setObjectName("label_numsat")
         self.formLayout_GPSdata.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_numsat)
+
+        # lineEdit_numsat
         self.lineEdit_numsat = QtWidgets.QLineEdit(self.formLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_numsat.setFont(font)
         self.lineEdit_numsat.setText("")
         self.lineEdit_numsat.setReadOnly(True)
         self.lineEdit_numsat.setObjectName("lineEdit_numsat")
         self.formLayout_GPSdata.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lineEdit_numsat)
+
+        # groupBox_telemetrydata
         self.groupBox_telemetrydata = QtWidgets.QGroupBox(self.mainframe_dashboard)
         self.groupBox_telemetrydata.setGeometry(QtCore.QRect(10, 364, 360, 271))
         font = QtGui.QFont()
@@ -283,6 +330,8 @@ class Ui_Window_Dashboard(object):
         self.label_height.setFont(font)
         self.label_height.setObjectName("label_height")
         self.formLayout_telemetrydata.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_height)
+
+        # lineEdit_height
         self.lineEdit_height = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -292,6 +341,8 @@ class Ui_Window_Dashboard(object):
         self.lineEdit_height.setReadOnly(True)
         self.lineEdit_height.setObjectName("lineEdit_height")
         self.formLayout_telemetrydata.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.lineEdit_height)
+        
+        # label_pressure
         self.label_pressure = QtWidgets.QLabel(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -300,14 +351,19 @@ class Ui_Window_Dashboard(object):
         self.label_pressure.setFont(font)
         self.label_pressure.setObjectName("label_pressure")
         self.formLayout_telemetrydata.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_pressure)
+        
+        # lineEdit_pressure
         self.lineEdit_pressure = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_pressure.setFont(font)
         self.lineEdit_pressure.setText("")
         self.lineEdit_pressure.setReadOnly(True)
         self.lineEdit_pressure.setObjectName("lineEdit_pressure")
         self.formLayout_telemetrydata.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.lineEdit_pressure)
+        
+        # label_temperature
         self.label_temperature = QtWidgets.QLabel(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -316,14 +372,19 @@ class Ui_Window_Dashboard(object):
         self.label_temperature.setFont(font)
         self.label_temperature.setObjectName("label_temperature")
         self.formLayout_telemetrydata.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_temperature)
+        
+        # lineEdit_temperature
         self.lineEdit_temperature = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_temperature.setFont(font)
         self.lineEdit_temperature.setText("")
         self.lineEdit_temperature.setReadOnly(True)
         self.lineEdit_temperature.setObjectName("lineEdit_temperature")
         self.formLayout_telemetrydata.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.lineEdit_temperature)
+        
+        # label_rotorspeed
         self.label_rotorspeed = QtWidgets.QLabel(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -332,14 +393,19 @@ class Ui_Window_Dashboard(object):
         self.label_rotorspeed.setFont(font)
         self.label_rotorspeed.setObjectName("label_rotorspeed")
         self.formLayout_telemetrydata.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.label_rotorspeed)
+        
+        # lineEdit_rotorspeed
         self.lineEdit_rotorspeed = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_rotorspeed.setFont(font)
         self.lineEdit_rotorspeed.setText("")
         self.lineEdit_rotorspeed.setReadOnly(True)
         self.lineEdit_rotorspeed.setObjectName("lineEdit_rotorspeed")
         self.formLayout_telemetrydata.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.lineEdit_rotorspeed)
+        
+        # label_pitch
         self.label_pitch = QtWidgets.QLabel(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -364,25 +430,34 @@ class Ui_Window_Dashboard(object):
         self.label_azimut.setFont(font)
         self.label_azimut.setObjectName("label_azimut")
         self.formLayout_telemetrydata.setWidget(6, QtWidgets.QFormLayout.LabelRole, self.label_azimut)
+        
+        # lineEdit_pitch
         self.lineEdit_pitch = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_pitch.setFont(font)
         self.lineEdit_pitch.setText("")
         self.lineEdit_pitch.setReadOnly(True)
         self.lineEdit_pitch.setObjectName("lineEdit_pitch")
         self.formLayout_telemetrydata.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.lineEdit_pitch)
+        
+        # lineEdit_roll
         self.lineEdit_roll = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_roll.setFont(font)
         self.lineEdit_roll.setText("")
         self.lineEdit_roll.setReadOnly(True)
         self.lineEdit_roll.setObjectName("lineEdit_roll")
         self.formLayout_telemetrydata.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.lineEdit_roll)
+        
+        # lineEdit_azimut
         self.lineEdit_azimut = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         font = QtGui.QFont()
         font.setPointSize(12)
+        font.setBold(False)
         self.lineEdit_azimut.setFont(font)
         self.lineEdit_azimut.setText("")
         self.lineEdit_azimut.setReadOnly(True)
