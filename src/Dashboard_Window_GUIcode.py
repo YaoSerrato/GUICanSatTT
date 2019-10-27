@@ -9,6 +9,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+plt.rcParams['font.size'] = 8
 
 class Ui_Window_Dashboard(object):
 
@@ -384,6 +388,8 @@ class Ui_Window_Dashboard(object):
         self.lineEdit_azimut.setReadOnly(True)
         self.lineEdit_azimut.setObjectName("lineEdit_azimut")
         self.formLayout_telemetrydata.setWidget(6, QtWidgets.QFormLayout.FieldRole, self.lineEdit_azimut)
+        
+        # tabWidget_plots
         self.tabWidget_plots = QtWidgets.QTabWidget(self.mainframe_dashboard)
         self.tabWidget_plots.setGeometry(QtCore.QRect(400, 183, 931, 411))
         font = QtGui.QFont()
@@ -395,24 +401,50 @@ class Ui_Window_Dashboard(object):
         self.tabWidget_plots.setAccessibleName("")
         self.tabWidget_plots.setAutoFillBackground(False)
         self.tabWidget_plots.setObjectName("tabWidget_plots")
-        self.tab_altura = QtWidgets.QWidget()
-        self.tab_altura.setObjectName("tab_altura")
-        self.tabWidget_plots.addTab(self.tab_altura, "")
+
+        # tab_height
+        self.tab_height = QtWidgets.QWidget()
+        self.tab_height.setObjectName("tab_height")
+        self.WG_tabheight = CreateCanvas(parent=self.tab_height, width=10.5, height=3.5,dpi=100)
+        self.WG_tabheight.move(-65,0)
+        self.tabWidget_plots.addTab(self.tab_height, "")
+
+        # tab_pressure
         self.tab_pressure = QtWidgets.QWidget()
         self.tab_pressure.setObjectName("tab_pressure")
+        self.WG_tabpressure = CreateCanvas(parent=self.tab_pressure, width=10.5, height=3.5,dpi=100)
+        self.WG_tabpressure.move(-65,0)
         self.tabWidget_plots.addTab(self.tab_pressure, "")
+
+        # tab_temperature
         self.tab_temperature = QtWidgets.QWidget()
         self.tab_temperature.setObjectName("tab_temperature")
+        self.WG_tabtemperature = CreateCanvas(parent=self.tab_temperature, width=10.5, height=3.5,dpi=100)
+        self.WG_tabtemperature.move(-65,0)
         self.tabWidget_plots.addTab(self.tab_temperature, "")
+
+        # tab_rotorspeed
         self.tab_rotorspeed = QtWidgets.QWidget()
         self.tab_rotorspeed.setObjectName("tab_rotorspeed")
+        self.WG_tabrotorspeed = CreateCanvas(parent=self.tab_rotorspeed, width=10.5, height=3.5,dpi=100)
+        self.WG_tabrotorspeed.move(-65,0)
         self.tabWidget_plots.addTab(self.tab_rotorspeed, "")
+
+        # tab_orientation
         self.tab_orientation = QtWidgets.QWidget()
         self.tab_orientation.setObjectName("tab_orientation")
+        self.WG_taborientation = CreateCanvas(parent=self.tab_orientation, width=10.5, height=3.5,dpi=100)
+        self.WG_taborientation.move(-65,0)
         self.tabWidget_plots.addTab(self.tab_orientation, "")
+
+        # tab_GPS
         self.tab_GPS = QtWidgets.QWidget()
         self.tab_GPS.setObjectName("tab_GPS")
+        self.WG_tabGPS = CreateCanvas(parent=self.tab_GPS, width=10.5, height=3.5,dpi=100)
+        self.WG_tabGPS.move(-65,0)
         self.tabWidget_plots.addTab(self.tab_GPS, "")
+
+
         self.pushButton_start = QtWidgets.QPushButton(self.mainframe_dashboard)
         self.pushButton_start.setGeometry(QtCore.QRect(410, 612, 91, 23))
         font = QtGui.QFont()
@@ -473,7 +505,7 @@ class Ui_Window_Dashboard(object):
         self.label_pitch.setText(_translate("Window_Dashboard", "Pitch [°]:"))
         self.label_roll.setText(_translate("Window_Dashboard", "Roll [°]:"))
         self.label_azimut.setText(_translate("Window_Dashboard", "Azimut [°]:"))
-        self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_altura), _translate("Window_Dashboard", "Altura"))
+        self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_height), _translate("Window_Dashboard", "Altura"))
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_pressure), _translate("Window_Dashboard", "Presión"))
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_temperature), _translate("Window_Dashboard", "Temperatura"))
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_rotorspeed), _translate("Window_Dashboard", "Velocidad Rotor"))
@@ -482,3 +514,38 @@ class Ui_Window_Dashboard(object):
         self.pushButton_start.setText(_translate("Window_Dashboard", "Iniciar"))
         self.pushButton_stop.setText(_translate("Window_Dashboard", "Terminar"))
         self.pushButton_continue.setText(_translate("Window_Dashboard", "Continuar"))
+
+class CreateCanvas(FigureCanvas):
+    # self = widget_graph_XXXX
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.ax = self.fig.add_subplot(111)        
+
+        FigureCanvas.__init__(self, self.fig)
+        self.setParent(parent)
+
+        FigureCanvas.setSizePolicy(self,
+                            QtWidgets.QSizePolicy.Expanding,
+                            QtWidgets.QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self)
+
+    def setWGtitle(self, title):
+        self.ax.set_title(title)
+
+    def setWGxlabel(self, label):
+        self.ax.set_xlabel(label)
+
+    def setWGylabel(self, label):
+        self.ax.set_ylabel(label)
+    
+    def setWGylim(self, ymin, ymax):
+        self.ax.set_ylim(ymin, ymax)
+
+    def setWGxlim(self, xmin, xmax):
+        self.ax.set_xlim(xmin, xmax)
+    
+    def setWGgrid(self, gridEnabler):
+        self.ax.grid(gridEnabler)
+
+    def clearWG(self):
+        self.ax.cla()
