@@ -91,7 +91,7 @@ class Ui_Window_Dashboard(object):
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
-        self.lineEdit_pcknum.setFont(font)
+        self.lineEdit_pcknum.setFont(font)        
         self.lineEdit_pcknum.setReadOnly(True)
         self.lineEdit_pcknum.setObjectName("lineEdit_pcknum")
 

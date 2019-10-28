@@ -263,6 +263,9 @@ class clsDashboardWindow(QMainWindow):
             self.uiclsDashboardWindow.lineEdit_altitude.setText(str(self.inst_altitude[-1]))
             self.uiclsDashboardWindow.lineEdit_rotorspeed.setText(str(self.inst_rotorspeed[-1]))
 
+            # Colouring state field
+            self.mthColourState(self.inst_state[-1])
+
             # Plotting
             if self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 0:
                 self.mthPlot(0, 'ALtura', 'Tiempo [s]', 'Altura [m]', self.inst_missiontime, self.inst_height, 'bo--')
@@ -286,7 +289,7 @@ class clsDashboardWindow(QMainWindow):
             pass
 
         self.inst_mutex.release()
-
+    
     def mthPlot(self, numplot, argmth_title, argmth_xlabel, argmth_ylabel, argmth_xdata, argmth_ydata, argmth_style):
         self.inst_plotWG[numplot].clearWG()
 
@@ -321,12 +324,30 @@ class clsDashboardWindow(QMainWindow):
         self.inst_plotWG[numplot].setWGtitle(argmth_title)
         self.inst_plotWG[numplot].setWGxlabel(argmth_xlabel)
         self.inst_plotWG[numplot].setWGylabel(argmth_ylabel)
-        self.inst_plotWG[numplot].setWGxlim(-180, 180)
-        self.inst_plotWG[numplot].setWGylim(-180, 180)
+        self.inst_plotWG[numplot].setWGxlim(-90, 90)
+        self.inst_plotWG[numplot].setWGylim(0, 360)
         self.inst_plotWG[numplot].setWGgrid(True)
 
         self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)
         self.inst_plotWG[numplot].draw()
+
+    def mthColourState(self, argmth_state):
+        self.uiclsDashboardWindow.lineEdit_state_wait.setStyleSheet('background-color: white')
+        self.uiclsDashboardWindow.lineEdit_state_ascent.setStyleSheet('background-color: white')
+        self.uiclsDashboardWindow.lineEdit_state_parachute.setStyleSheet('background-color: white')
+        self.uiclsDashboardWindow.lineEdit_state_autorrotation.setStyleSheet('background-color: white')
+        self.uiclsDashboardWindow.lineEdit_state_landing.setStyleSheet('background-color: white')        
+
+        if argmth_state == 1:
+            self.uiclsDashboardWindow.lineEdit_state_wait.setStyleSheet('background-color: yellow')
+        elif argmth_state == 2:
+            self.uiclsDashboardWindow.lineEdit_state_ascent.setStyleSheet('background-color: yellow')
+        elif argmth_state == 3:
+            self.uiclsDashboardWindow.lineEdit_state_parachute.setStyleSheet('background-color: yellow')
+        elif argmth_state == 4:
+            self.uiclsDashboardWindow.lineEdit_state_autorrotation.setStyleSheet('background-color: yellow')
+        elif argmth_state == 5:
+            self.uiclsDashboardWindow.lineEdit_state_landing.setStyleSheet('background-color: yellow')
 
 
 # ***************************************************************************************************************************************** #
