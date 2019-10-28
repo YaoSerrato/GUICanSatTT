@@ -339,7 +339,7 @@ class clsDashboardWindow(QMainWindow):
         self.uiclsDashboardWindow.lineEdit_state_landing.setStyleSheet('background-color: white')        
 
         if argmth_state == 1:
-            self.uiclsDashboardWindow.lineEdit_state_wait.setStyleSheet('background-color: yellow')
+            self.uiclsDashboardWindow.lineEdit_state_wait.setStyleSheet('background-color: yellow')            
         elif argmth_state == 2:
             self.uiclsDashboardWindow.lineEdit_state_ascent.setStyleSheet('background-color: yellow')
         elif argmth_state == 3:
