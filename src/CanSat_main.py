@@ -276,11 +276,11 @@ class clsDashboardWindow(QMainWindow):
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 3:
                 self.mthPlot(3, 'Velocidad del rotor', 'Tiempo [s]', 'Velocidad [rpm]', self.inst_missiontime, self.inst_rotorspeed, 'c*--')
 
-            # elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 4:
-            #     self.mthPlot(4, 'Orientación del CanSat', 'Tiempo [s]', 'Orientación [°]')
+            elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 4:
+                self.mthPlotOrientation(4, 'Orientación del CanSat', 'Tiempo [s]', 'Orientación [°]', self.inst_missiontime, self.inst_pitch, self.inst_roll, self.inst_azimuth)
 
-            # elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 5:
-            #     self.mthPlot(5, 'Posición GPS', 'Tiempo [s]', 'Posición [°]')
+            elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 5:
+                self.mthPlotGPS(5, 'Posición GPS', 'Longitud [°]', 'Latitud [°]', self.inst_longitude, self.inst_latitude, 'ko--')
 
         except:
             pass
@@ -293,12 +293,41 @@ class clsDashboardWindow(QMainWindow):
         self.inst_plotWG[numplot].setWGtitle(argmth_title)
         self.inst_plotWG[numplot].setWGxlabel(argmth_xlabel)
         self.inst_plotWG[numplot].setWGylabel(argmth_ylabel)
-        # self.inst_plotWG[numplot].setWGylim(0, 1)
         self.inst_plotWG[numplot].setWGxlim(max(0, argmth_xdata[-1] - 10), argmth_xdata[-1])
         self.inst_plotWG[numplot].setWGgrid(True)
 
         self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)
         self.inst_plotWG[numplot].draw()
+
+    def mthPlotOrientation(self, numplot, argmth_title, argmth_xlabel, argmth_ylabel, argmth_xdata, argmth_pitch, argmth_roll, argmth_az):
+        self.inst_plotWG[numplot].clearWG()
+        
+        self.inst_plotWG[numplot].setWGtitle(argmth_title)
+        self.inst_plotWG[numplot].setWGxlabel(argmth_xlabel)
+        self.inst_plotWG[numplot].setWGylabel(argmth_ylabel)
+        self.inst_plotWG[numplot].setWGylim(-180, 180)
+        self.inst_plotWG[numplot].setWGxlim(max(0, argmth_xdata[-1] - 10), argmth_xdata[-1])
+        self.inst_plotWG[numplot].setWGgrid(True)
+
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_pitch, 'bo--', label = 'Pitch', linewidth = 2, markersize = 6)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_roll, 'rs--', label = 'Roll', linewidth = 2, markersize = 6)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_az, 'k^--', label = 'Azimuth', linewidth = 2, markersize = 6)
+        self.inst_plotWG[numplot].ax.legend()
+        self.inst_plotWG[numplot].draw()
+
+    def mthPlotGPS(self, numplot, argmth_title, argmth_xlabel, argmth_ylabel, argmth_xdata, argmth_ydata, argmth_style):
+        self.inst_plotWG[numplot].clearWG()
+        
+        self.inst_plotWG[numplot].setWGtitle(argmth_title)
+        self.inst_plotWG[numplot].setWGxlabel(argmth_xlabel)
+        self.inst_plotWG[numplot].setWGylabel(argmth_ylabel)
+        self.inst_plotWG[numplot].setWGxlim(-180, 180)
+        self.inst_plotWG[numplot].setWGylim(-180, 180)
+        self.inst_plotWG[numplot].setWGgrid(True)
+
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)
+        self.inst_plotWG[numplot].draw()
+
 
 
 # ***************************************************************************************************************************************** #
