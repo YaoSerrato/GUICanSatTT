@@ -296,7 +296,7 @@ class clsDashboardWindow(QMainWindow):
         self.inst_plotWG[numplot].setWGxlim(max(0, argmth_xdata[-1]-10), argmth_xdata[-1])
         self.inst_plotWG[numplot].setWGgrid(True)
 
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 12)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)
         self.inst_plotWG[numplot].draw()
 
     def mthPlotOrientation(self, numplot, argmth_title, argmth_xlabel, argmth_ylabel, argmth_xdata, argmth_pitch, argmth_roll, argmth_az):
@@ -309,9 +309,9 @@ class clsDashboardWindow(QMainWindow):
         self.inst_plotWG[numplot].setWGxlim(max(0, argmth_xdata[-1]-10), argmth_xdata[-1])
         self.inst_plotWG[numplot].setWGgrid(True)
 
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_pitch, 'bo--', label = 'Pitch', linewidth = 2, markersize = 12)
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_roll, 'rs--', label = 'Roll', linewidth = 2, markersize = 12)
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_az, 'k^--', label = 'Azimuth', linewidth = 2, markersize = 12)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_pitch, 'bo--', label = 'Pitch', linewidth = 2, markersize = 8)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_roll, 'rs--', label = 'Roll', linewidth = 2, markersize = 8)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_az, 'k^--', label = 'Azimuth', linewidth = 2, markersize = 8)
         self.inst_plotWG[numplot].ax.legend()
         self.inst_plotWG[numplot].draw()
 
@@ -325,7 +325,7 @@ class clsDashboardWindow(QMainWindow):
         self.inst_plotWG[numplot].setWGylim(-180, 180)
         self.inst_plotWG[numplot].setWGgrid(True)
 
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 12)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)
         self.inst_plotWG[numplot].draw()
 
 
