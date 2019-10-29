@@ -171,7 +171,9 @@ class clsDashboardWindow(QMainWindow):
 
         # Initializing instance variables
         self.inst_queueDashboard = argcls_queuedata
-        self.inst_csvpathDashboard = argcls_pathcsv
+        
+        self.inst_csvfile = open(argcls_pathcsv, mode = 'at', newline = '')
+        self.inst_csvwriter = csv.writer(self.inst_csvfile, delimiter = ',')
 
         self.inst_mutex = threading.Lock()        
 
@@ -219,6 +221,7 @@ class clsDashboardWindow(QMainWindow):
 
     def slotCloseDashboard(self):
         self.close()
+        self.inst_csvfile.close()
     
     def mthDisplay(self):
         # Locking thread
@@ -232,6 +235,7 @@ class clsDashboardWindow(QMainWindow):
             # Getting data from inst_queueDashboard
             for _ in range(0, self.inst_queueDashboard.qsize()):
                 dataframe = self.inst_queueDashboard.get()
+                
                 self.inst_pcknum.append(dataframe[0])
                 self.inst_missiontime.append(dataframe[1])
                 self.inst_pitch.append(dataframe[2])
@@ -246,6 +250,10 @@ class clsDashboardWindow(QMainWindow):
                 self.inst_altitude.append(dataframe[11])
                 self.inst_rotorspeed.append(dataframe[12])
                 self.inst_state.append(dataframe[13])
+
+                dataframestr = list(map(str,dataframe))
+                self.inst_csvwriter.writerow(dataframestr)
+                # self.inst_csvfile.close()
 
             # Displaying values in LineEdits
             self.uiclsDashboardWindow.lineEdit_dataframe.setText(str(dataframe))
@@ -264,7 +272,7 @@ class clsDashboardWindow(QMainWindow):
             self.uiclsDashboardWindow.lineEdit_rotorspeed.setText(str(self.inst_rotorspeed[-1]))
 
             # Colouring state field
-            self.mthColourState(self.inst_state[-1])
+            # self.mthColourState(self.inst_state[-1])
 
             # Plotting
             if self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 0:
@@ -355,7 +363,7 @@ class clsDashboardWindow(QMainWindow):
 # ***************************************************************************************************************************************** #
 
 # Plotter
-def ProcessPlotter(argdef_queuePlotter, argdef_CSV):
+def ProcessPlotter(argdef_queuePlotter, argdef_CSV):    
     app_dashboard = QApplication(sys.argv)
     app_dashboard.setStyle(QStyleFactory.create('Fusion'))
 
