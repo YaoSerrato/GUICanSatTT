@@ -373,7 +373,7 @@ def ProcessPlotter(argdef_queuePlotter, argdef_CSV):
 
 # Producer
 def ProcessProducer(argdef_queueProducer, argdef_COM):
-    ser = serial.Serial(argdef_COM, 9600, timeout = 1)
+    ser = serial.Serial(argdef_COM, 115200, timeout = 1)
     flagserial = True
 
     while flagserial:
