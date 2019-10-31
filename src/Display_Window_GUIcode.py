@@ -15,13 +15,22 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 8
 
 class Ui_DisplayPlots_Window(object):
+    # Creating graphical environment
     def setupUi(self, DisplayPlots_Window):
+
+        # Configuring main widget DisplayPlots_Window
         DisplayPlots_Window.setObjectName("DisplayPlots_Window")
         DisplayPlots_Window.resize(1350, 670)
         DisplayPlots_Window.setMinimumSize(QtCore.QSize(1350, 670))
         DisplayPlots_Window.setMaximumSize(QtCore.QSize(1350, 670))
+
+        # centralwidget_displayplots
         self.centralwidget_displayplots = QtWidgets.QWidget(DisplayPlots_Window)
+        self.WG_plotarea = CreateCanvas(parent = self.centralwidget_displayplots, width = 12.90, height = 5, dpi = 100)
+        self.WG_plotarea.move(30,140)
         self.centralwidget_displayplots.setObjectName("centralwidget_displayplots")
+
+        # label_title
         self.label_title = QtWidgets.QLabel(self.centralwidget_displayplots)
         self.label_title.setGeometry(QtCore.QRect(730, 10, 591, 41))
         font = QtGui.QFont()
@@ -31,6 +40,8 @@ class Ui_DisplayPlots_Window(object):
         font.setWeight(75)
         self.label_title.setFont(font)
         self.label_title.setObjectName("label_title")
+
+        # line_separator
         self.line_separator = QtWidgets.QFrame(self.centralwidget_displayplots)
         self.line_separator.setGeometry(QtCore.QRect(10, 50, 1320, 3))
         font = QtGui.QFont()
@@ -41,45 +52,56 @@ class Ui_DisplayPlots_Window(object):
         self.line_separator.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_separator.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_separator.setObjectName("line_separator")
-        self.label_pcknum = QtWidgets.QLabel(self.centralwidget_displayplots)
-        self.label_pcknum.setGeometry(QtCore.QRect(30, 70, 171, 16))
+
+        # label_parameter
+        self.label_parameter = QtWidgets.QLabel(self.centralwidget_displayplots)
+        self.label_parameter.setGeometry(QtCore.QRect(30, 70, 171, 16))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
         font.setBold(False)
         font.setWeight(50)
-        self.label_pcknum.setFont(font)
-        self.label_pcknum.setObjectName("label_pcknum")
-        self.comboBox = QtWidgets.QComboBox(self.centralwidget_displayplots)
-        self.comboBox.setGeometry(QtCore.QRect(30, 95, 221, 22))
-        self.comboBox.setObjectName("comboBox")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget_displayplots)
-        self.pushButton.setGeometry(QtCore.QRect(270, 95, 120, 23))
+        self.label_parameter.setFont(font)
+        self.label_parameter.setObjectName("label_parameter")
+
+        # comboBox_parameter
+        self.comboBox_parameter = QtWidgets.QComboBox(self.centralwidget_displayplots)
+        self.comboBox_parameter.setGeometry(QtCore.QRect(30, 95, 221, 22))
+        self.comboBox_parameter.setObjectName("comboBox_parameter")
+
+        # pushButton_plot
+        self.pushButton_plot = QtWidgets.QPushButton(self.centralwidget_displayplots)
+        self.pushButton_plot.setGeometry(QtCore.QRect(270, 95, 120, 23))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
-        self.pushButton.setFont(font)
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget_displayplots)
-        self.pushButton_2.setGeometry(QtCore.QRect(1200, 95, 120, 23))
+        self.pushButton_plot.setFont(font)
+        self.pushButton_plot.setObjectName("pushButton_plot")
+
+        # pushButton_close
+        self.pushButton_close = QtWidgets.QPushButton(self.centralwidget_displayplots)
+        self.pushButton_close.setGeometry(QtCore.QRect(1200, 95, 120, 23))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
-        self.pushButton_2.setFont(font)
-        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_close.setFont(font)
+        self.pushButton_close.setObjectName("pushButton_plot_2")
+
         DisplayPlots_Window.setCentralWidget(self.centralwidget_displayplots)
 
         self.retranslateUi(DisplayPlots_Window)
         QtCore.QMetaObject.connectSlotsByName(DisplayPlots_Window)
 
+    # Labeling all GUI elements
     def retranslateUi(self, DisplayPlots_Window):
         _translate = QtCore.QCoreApplication.translate
         DisplayPlots_Window.setWindowTitle(_translate("DisplayPlots_Window", "MainWindow"))
         self.label_title.setText(_translate("DisplayPlots_Window", "CanSat con sistema de descenso por autorrotación"))
-        self.label_pcknum.setText(_translate("DisplayPlots_Window", "Parámetro:"))
-        self.pushButton.setText(_translate("DisplayPlots_Window", "Graficar"))
-        self.pushButton_2.setText(_translate("DisplayPlots_Window", "Cerrar"))
+        self.label_parameter.setText(_translate("DisplayPlots_Window", "Parámetro:"))
+        self.pushButton_plot.setText(_translate("DisplayPlots_Window", "Graficar"))
+        self.pushButton_close.setText(_translate("DisplayPlots_Window", "Cerrar"))
 
+# Plotter class
 class CreateCanvas(FigureCanvas):
     # self = widget_graph_XXXX
     def __init__(self, parent=None, width=5, height=4, dpi=100):
