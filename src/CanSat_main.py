@@ -5,6 +5,7 @@
 # ***************************************************************************************************************************************** #
 import sys
 import os
+import signal
 import glob
 
 import serial
@@ -27,6 +28,7 @@ from PyQt5.QtWidgets import QApplication, QDialog, QStyleFactory, QFileDialog, Q
 from ConfigurationWindow_Dialog_GUIcode import *
 from InitialCanSatConfig_Dialog_GUIcode import *
 from Dashboard_Window_GUIcode import *
+from Display_Window_GUIcode import *
 
 # ***************************************************************************************************************************************** #
 # Classes
@@ -149,13 +151,14 @@ class clsConfigurationDialog(QDialog):
 # External methods called in clsConfigurationDialog class
 def extdefCreateProcesses(argdef_COMport, argdef_pathcsv):
     queue_data = Queue()
+    queue_killer = Queue()
 
     # Creating Plotter Process
-    process_plotter = Process(target = ProcessPlotter, name = 'process_plotter', args = (queue_data, argdef_pathcsv))
+    process_plotter = Process(target = ProcessPlotter, name = 'process_plotter', args = (queue_data, argdef_pathcsv, queue_killer))
     process_plotter.start()
 
     # Creating Producer Process
-    process_producer = Process(target = ProcessProducer, name = 'process_producer', args = (queue_data, argdef_COMport))
+    process_producer = Process(target = ProcessProducer, name = 'process_producer', args = (queue_data, argdef_COMport, queue_killer))
     process_producer.start()
 
     process_plotter.join()
@@ -165,15 +168,17 @@ def extdefCreateProcesses(argdef_COMport, argdef_pathcsv):
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # Dashboard class
 class clsDashboardWindow(QMainWindow):
-    def __init__(self, argcls_queuedata, argcls_pathcsv):
+    def __init__(self, argcls_queuedata, argcls_pathcsv, argcls_killer):
         # Calling parent constructor
         super().__init__()
 
         # Initializing instance variables
         self.inst_queueDashboard = argcls_queuedata
+        self.inst_queueKiller = argcls_killer
         
         self.inst_csvfile = open(argcls_pathcsv, mode = 'at', newline = '')
         self.inst_csvwriter = csv.writer(self.inst_csvfile, delimiter = ',')
+        self.inst_csvwriter.writerow(['Paquete','Tiempo','Pitch','Roll','Azimuth','Presión','Temperatura','Altura','Satélites','Latitud','Longitud','Altitud','Velocidad','Estado'])
 
         self.inst_mutex = threading.Lock()        
 
@@ -213,8 +218,11 @@ class clsDashboardWindow(QMainWindow):
         # Managing signals & slots
         self.uiclsDashboardWindow.pushButton_start.clicked.connect(self.slotInitializer)
         self.uiclsDashboardWindow.pushButton_stop.clicked.connect(self.slotCloseDashboard)
+        self.uiclsDashboardWindow.pushButton_continue.clicked.connect(self.slotCreateDisplay)
     
     def slotInitializer(self):
+        self.uiclsDashboardWindow.pushButton_continue.setDisabled(False)
+        self.uiclsDashboardWindow.pushButton_start.setDisabled(True)
         if self.inst_initflag:
             self.mthDisplay()
             self.inst_initflag = False
@@ -222,6 +230,13 @@ class clsDashboardWindow(QMainWindow):
     def slotCloseDashboard(self):
         self.close()
         self.inst_csvfile.close()
+
+    def slotCreateDisplay(self):
+        # Killing Producer Process
+        os.kill(self.inst_queueKiller.get(), signal.SIGTERM)
+
+        self.close()
+        self.DisplayWindow = clsDisplay()
     
     def mthDisplay(self):
         # Locking thread
@@ -358,22 +373,46 @@ class clsDashboardWindow(QMainWindow):
             self.uiclsDashboardWindow.lineEdit_state_landing.setStyleSheet('background-color: yellow')
 
 
+# -----------------------------------------------------------------------------------------------------------------------------------------
+# Display class
+
+class clsDisplay(QMainWindow):
+    def __init__(self):
+        # Calling parent constructor
+        super().__init__()
+
+        # Creating graphical environment
+        self.uiclsDisplay = Ui_DisplayPlots_Window()
+        self.uiclsDisplay.setupUi(self)
+        self.show()
+
+        # Managing signals & slots
+        self.uiclsDisplay.pushButton_close.clicked.connect(self.slotCloseDisplay)
+
+
+    def slotCloseDisplay(self):
+        self.close()
+
 # ***************************************************************************************************************************************** #
 # Processes
 # ***************************************************************************************************************************************** #
 
 # Plotter
-def ProcessPlotter(argdef_queuePlotter, argdef_CSV):    
+def ProcessPlotter(argdef_queuePlotter, argdef_CSV, argdef_killer):
     app_dashboard = QApplication(sys.argv)
     app_dashboard.setStyle(QStyleFactory.create('Fusion'))
 
-    objclsDashboardWindow_Dashboard = clsDashboardWindow(argdef_queuePlotter, argdef_CSV)
+    objclsDashboardWindow_Dashboard = clsDashboardWindow(argdef_queuePlotter, argdef_CSV, argdef_killer)
 
     sys.exit(app_dashboard.exec_())
 
 # Producer
-def ProcessProducer(argdef_queueProducer, argdef_COM):
-    ser = serial.Serial(argdef_COM, 115200, timeout = 1)
+def ProcessProducer(argdef_queueProducer, argdef_COM, argdef_killer):
+
+    # Publishing Producer PID number
+    argdef_killer.put(os.getpid())
+
+    ser = serial.Serial(argdef_COM, 9600, timeout = 1)
     flagserial = True
 
     while flagserial:
