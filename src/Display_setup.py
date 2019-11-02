@@ -13,7 +13,17 @@ class clsDisplay(QMainWindow):
         # Creating graphical environment
         self.uiclsDisplay = Ui_DisplayPlots_Window()
         self.uiclsDisplay.setupUi(self)
+
+        self.uiclsDisplay.comboBox_parameter.addItems(['None','MUSE','Kasabian','Lady Gaga','The Beatles','Billie Elish','Green Day'])        
+
         self.show()
+
+        # Managing signals & slots
+        self.uiclsDisplay.comboBox_parameter.currentIndexChanged.connect(self.slotItemSelectedChanged)
+
+    def slotItemSelectedChanged(self):
+        print(self.uiclsDisplay.comboBox_parameter.currentIndex())
+        print(self.uiclsDisplay.comboBox_parameter.currentText())
 
 if __name__=="__main__":
     app_display = QApplication(sys.argv)
