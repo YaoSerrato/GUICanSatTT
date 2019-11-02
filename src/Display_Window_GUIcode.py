@@ -28,8 +28,7 @@ class Ui_DisplayPlots_Window(object):
 
         # centralwidget_displayplots
         self.centralwidget_displayplots = QtWidgets.QWidget(DisplayPlots_Window)
-        self.WG_plotarea = CreateCanvas(parent = self.centralwidget_displayplots, width = 12.90, height = 5.4, dpi = 100)
-        self.WG_plotarea.setWGgrid(True)
+        self.WG_plotarea = CreateCanvas(parent = self.centralwidget_displayplots, width = 12.90, height = 5.4, dpi = 100)        
         self.WG_toolbar = NavigationToolbar(self.WG_plotarea, self.WG_plotarea)
         self.WG_plotarea.move(30,110)
         self.centralwidget_displayplots.setObjectName("centralwidget_displayplots")
@@ -73,15 +72,6 @@ class Ui_DisplayPlots_Window(object):
         self.comboBox_parameter.setGeometry(QtCore.QRect(130, 70, 221, 22))
         self.comboBox_parameter.setObjectName("comboBox_parameter")
 
-        # pushButton_plot
-        self.pushButton_plot = QtWidgets.QPushButton(self.centralwidget_displayplots)
-        self.pushButton_plot.setGeometry(QtCore.QRect(370, 70, 120, 23))
-        font = QtGui.QFont()
-        font.setFamily("Consolas")
-        font.setPointSize(12)
-        self.pushButton_plot.setFont(font)
-        self.pushButton_plot.setObjectName("pushButton_plot")
-
         # pushButton_close
         self.pushButton_close = QtWidgets.QPushButton(self.centralwidget_displayplots)
         self.pushButton_close.setGeometry(QtCore.QRect(1200, 70, 120, 23))
@@ -89,7 +79,7 @@ class Ui_DisplayPlots_Window(object):
         font.setFamily("Consolas")
         font.setPointSize(12)
         self.pushButton_close.setFont(font)
-        self.pushButton_close.setObjectName("pushButton_plot_2")
+        self.pushButton_close.setObjectName("pushButton_close")
 
         DisplayPlots_Window.setCentralWidget(self.centralwidget_displayplots)
 
@@ -101,8 +91,7 @@ class Ui_DisplayPlots_Window(object):
         _translate = QtCore.QCoreApplication.translate
         DisplayPlots_Window.setWindowTitle(_translate("DisplayPlots_Window", "MainWindow"))
         self.label_title.setText(_translate("DisplayPlots_Window", "CanSat con sistema de descenso por autorrotación"))
-        self.label_parameter.setText(_translate("DisplayPlots_Window", "Parámetro:"))
-        self.pushButton_plot.setText(_translate("DisplayPlots_Window", "Graficar"))
+        self.label_parameter.setText(_translate("DisplayPlots_Window", "Parámetro:"))        
         self.pushButton_close.setText(_translate("DisplayPlots_Window", "Cerrar"))
 
 # Plotter class
