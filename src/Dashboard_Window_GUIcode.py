@@ -188,7 +188,7 @@ class Ui_Window_Dashboard(object):
 
         # label_dataframe
         self.label_dataframe = QtWidgets.QLabel(self.groupBox_infomission)
-        self.label_dataframe.setGeometry(QtCore.QRect(10, 70, 141, 16))
+        self.label_dataframe.setGeometry(QtCore.QRect(10, 78, 141, 16))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
@@ -199,7 +199,7 @@ class Ui_Window_Dashboard(object):
 
         # lineEdit_dataframe
         self.lineEdit_dataframe = QtWidgets.QLineEdit(self.groupBox_infomission)
-        self.lineEdit_dataframe.setGeometry(QtCore.QRect(150, 70, 1161, 20))
+        self.lineEdit_dataframe.setGeometry(QtCore.QRect(150, 78, 1161, 20))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(False)
@@ -207,7 +207,7 @@ class Ui_Window_Dashboard(object):
         self.lineEdit_dataframe.setReadOnly(True)
         self.lineEdit_dataframe.setObjectName("lineEdit_dataframe")
 
-
+        # groupBox_GPSdata
         self.groupBox_GPSdata = QtWidgets.QGroupBox(self.mainframe_dashboard)
         self.groupBox_GPSdata.setGeometry(QtCore.QRect(10, 183, 360, 171))
         font = QtGui.QFont()
@@ -217,12 +217,16 @@ class Ui_Window_Dashboard(object):
         font.setWeight(75)
         self.groupBox_GPSdata.setFont(font)
         self.groupBox_GPSdata.setObjectName("groupBox_GPSdata")
+
+        # formLayoutWidget
         self.formLayoutWidget = QtWidgets.QWidget(self.groupBox_GPSdata)
         self.formLayoutWidget.setGeometry(QtCore.QRect(10, 30, 341, 131))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout_GPSdata = QtWidgets.QFormLayout(self.formLayoutWidget)
         self.formLayout_GPSdata.setContentsMargins(5, 5, 5, 5)
         self.formLayout_GPSdata.setObjectName("formLayout_GPSdata")
+
+        # label_latitude
         self.label_latitude = QtWidgets.QLabel(self.formLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -553,6 +557,77 @@ class Ui_Window_Dashboard(object):
         self.pushButton_continue.setObjectName("pushButton_continue")
         Window_Dashboard.setCentralWidget(self.centralwidget_dashboard)
 
+        # label_finished                
+        self.label_finished = QtWidgets.QLabel(self.mainframe_dashboard)
+        self.label_finished.setGeometry(QtCore.QRect(800, 614, 300, 16))
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        font.setPointSize(18)
+        font.setBold(True)
+        font.setWeight(50)
+        self.label_finished.setFont(font)
+        self.label_finished.setObjectName("label_finished")
+
+        # label_state_wait
+        self.label_state_wait = QtWidgets.QLabel(self.groupBox_infomission)
+        self.label_state_wait.setGeometry(QtCore.QRect(680, 50, 113, 20))        
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_state_wait.setFont(font)
+        self.label_state_wait.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_state_wait.setObjectName("label_state_wait")
+
+        # label_state_ascent
+        self.label_state_ascent = QtWidgets.QLabel(self.groupBox_infomission)
+        self.label_state_ascent.setGeometry(QtCore.QRect(800, 50, 113, 20))
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_state_ascent.setFont(font)
+        self.label_state_ascent.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_state_ascent.setObjectName("label_state_ascent")
+
+        # label_state_parachute
+        self.label_state_parachute = QtWidgets.QLabel(self.groupBox_infomission)
+        self.label_state_parachute.setGeometry(QtCore.QRect(920, 50, 113, 20))
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_state_parachute.setFont(font)
+        self.label_state_parachute.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_state_parachute.setObjectName("label_state_parachute")
+
+        # label_state_autorrotation
+        self.label_state_autorrotation = QtWidgets.QLabel(self.groupBox_infomission)
+        self.label_state_autorrotation.setGeometry(QtCore.QRect(1040, 50, 151, 20))
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_state_autorrotation.setFont(font)
+        self.label_state_autorrotation.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_state_autorrotation.setObjectName("label_state_autorrotation")
+
+        # label_state_landing
+        self.label_state_landing = QtWidgets.QLabel(self.groupBox_infomission)
+        self.label_state_landing.setGeometry(QtCore.QRect(1200, 50, 113, 20))
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_state_landing.setFont(font)
+        self.label_state_landing.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_state_landing.setObjectName("label_state_landing")
+
         self.retranslateUi(Window_Dashboard)
         self.tabWidget_plots.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Window_Dashboard)
@@ -561,21 +636,19 @@ class Ui_Window_Dashboard(object):
         _translate = QtCore.QCoreApplication.translate
         Window_Dashboard.setWindowTitle(_translate("Window_Dashboard", "Estación en Tierra"))
         self.label_title.setText(_translate("Window_Dashboard", "CanSat con sistema de descenso por autorrotación"))
+
         self.groupBox_infomission.setTitle(_translate("Window_Dashboard", "Información de la misión"))
         self.label_pcknum.setText(_translate("Window_Dashboard", "Número de paquete:"))
         self.label_timemission.setText(_translate("Window_Dashboard", "Tiempo de misión:"))
         self.label_state.setText(_translate("Window_Dashboard", "Estado:"))
-        self.lineEdit_state_wait.setText(_translate("Window_Dashboard", "Espera"))
-        self.lineEdit_state_ascent.setText(_translate("Window_Dashboard", "Ascenso"))
-        self.lineEdit_state_parachute.setText(_translate("Window_Dashboard", "Paracaídas"))
-        self.lineEdit_state_autorrotation.setText(_translate("Window_Dashboard", "Autorrotación"))
-        self.lineEdit_state_landing.setText(_translate("Window_Dashboard", "Aterrizaje"))
         self.label_dataframe.setText(_translate("Window_Dashboard", "Trama recibida:"))
+
         self.groupBox_GPSdata.setTitle(_translate("Window_Dashboard", "Datos de GPS"))
         self.label_latitude.setText(_translate("Window_Dashboard", "Latitud:"))
         self.label_longitude.setText(_translate("Window_Dashboard", "Longitud:"))
         self.label_altitude.setText(_translate("Window_Dashboard", "Altitud:"))
         self.label_numsat.setText(_translate("Window_Dashboard", "N° Satélites:"))
+
         self.groupBox_telemetrydata.setTitle(_translate("Window_Dashboard", "Datos de telemetría"))
         self.label_height.setText(_translate("Window_Dashboard", "Altura [m]:"))
         self.label_pressure.setText(_translate("Window_Dashboard", "Presión [Pa]:"))
@@ -584,15 +657,24 @@ class Ui_Window_Dashboard(object):
         self.label_pitch.setText(_translate("Window_Dashboard", "Pitch [°]:"))
         self.label_roll.setText(_translate("Window_Dashboard", "Roll [°]:"))
         self.label_azimut.setText(_translate("Window_Dashboard", "Azimut [°]:"))
+
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_height), _translate("Window_Dashboard", "Altura"))
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_pressure), _translate("Window_Dashboard", "Presión"))
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_temperature), _translate("Window_Dashboard", "Temperatura"))
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_rotorspeed), _translate("Window_Dashboard", "Velocidad Rotor"))
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_orientation), _translate("Window_Dashboard", "Orientación"))
         self.tabWidget_plots.setTabText(self.tabWidget_plots.indexOf(self.tab_GPS), _translate("Window_Dashboard", "GPS"))
+
         self.pushButton_start.setText(_translate("Window_Dashboard", "Iniciar"))
         self.pushButton_stop.setText(_translate("Window_Dashboard", "Terminar"))
         self.pushButton_continue.setText(_translate("Window_Dashboard", "Continuar"))
+        self.label_finished.setText(_translate("Window_Dashboard", ""))
+
+        self.label_state_wait.setText(_translate("Window_Dashboard", "Espera"))
+        self.label_state_ascent.setText(_translate("Window_Dashboard", "Ascenso"))
+        self.label_state_parachute.setText(_translate("Window_Dashboard", "Paracaídas"))
+        self.label_state_autorrotation.setText(_translate("Window_Dashboard", "Autorrotación"))
+        self.label_state_landing.setText(_translate("Window_Dashboard", "Aterrizaje"))
 
 class CreateCanvas(FigureCanvas):
     # self = widget_graph_XXXX
