@@ -519,7 +519,7 @@ class Ui_Window_Dashboard(object):
         self.WG_tabGPS.move(-65,0)
         self.tabWidget_plots.addTab(self.tab_GPS, "")
 
-
+        # pushButton_start
         self.pushButton_start = QtWidgets.QPushButton(self.mainframe_dashboard)
         self.pushButton_start.setGeometry(QtCore.QRect(410, 612, 91, 23))
         font = QtGui.QFont()
@@ -529,8 +529,10 @@ class Ui_Window_Dashboard(object):
         font.setWeight(50)
         self.pushButton_start.setFont(font)
         self.pushButton_start.setObjectName("pushButton_start")
+
+        # pushButton_stop
         self.pushButton_stop = QtWidgets.QPushButton(self.mainframe_dashboard)
-        self.pushButton_stop.setGeometry(QtCore.QRect(1100, 612, 91, 23))
+        self.pushButton_stop.setGeometry(QtCore.QRect(521, 612, 91, 23))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
@@ -538,6 +540,8 @@ class Ui_Window_Dashboard(object):
         font.setWeight(50)
         self.pushButton_stop.setFont(font)
         self.pushButton_stop.setObjectName("pushButton_stop")
+
+        # pushButton_continue
         self.pushButton_continue = QtWidgets.QPushButton(self.mainframe_dashboard)
         self.pushButton_continue.setGeometry(QtCore.QRect(1230, 612, 91, 23))
         font = QtGui.QFont()
