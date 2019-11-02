@@ -4,19 +4,16 @@
 # Imports
 # ***************************************************************************************************************************************** #
 import sys
-import os
-import signal
 import glob
 
 import serial
 
 import csv
-
-import time
+from collections import defaultdict
 
 import string
 
-import random
+import numpy
 
 from multiprocessing import Queue, Process
 import threading
@@ -163,8 +160,7 @@ def extdefCreateProcesses(argdef_COMport, argdef_pathcsv):
     process_producer.start()
 
     process_plotter.join()
-    process_producer.join()
-    # here I create the queues
+    process_producer.join()    
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # Dashboard class
@@ -184,6 +180,7 @@ class clsDashboardWindow(QMainWindow):
         self.inst_mutex = threading.Lock()        
 
         self.inst_initflag = True
+        self.inst_timerflag = True
 
         self.inst_pcknum = []
         self.inst_missiontime = []
@@ -231,11 +228,13 @@ class clsDashboardWindow(QMainWindow):
 
     def slotCloseDashboard(self):        
         self.inst_csvfile.close()
+        self.inst_timerflag = False
         self.close()
 
     def slotCreateDisplay(self):
-        self.close()
         self.inst_csvfile.close()
+        self.inst_timerflag = False
+        self.close()        
         self.DisplayWindow = clsDisplay(self.inst_cvspath)
     
     def mthDisplay(self):
@@ -243,8 +242,11 @@ class clsDashboardWindow(QMainWindow):
         self.inst_mutex.acquire()
 
         # Creating timer thread for getting data from inst_queueDashboard and plotting/displaying it
-        self.inst_timerplot = threading.Timer(1.0, self.mthDisplay)
-        self.inst_timerplot.start()
+        if self.inst_timerflag:
+            self.inst_timerplot = threading.Timer(1.0, self.mthDisplay)
+            self.inst_timerplot.start()
+        else:
+            pass
 
         try:
             # Getting data from inst_queueDashboard
@@ -381,27 +383,28 @@ class clsDisplay(QMainWindow):
         # Calling parent constructor
         super().__init__()
 
-        # Initializing instance variables
-        self.csvdisplay = argcls_csvdisplay
+        # Initializing instance variables        
+        self.csvcolumns = defaultdict(list)
+        with open(argcls_csvdisplay) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                for (k,v) in row.items():
+                    self.csvcolumns[k].append(v)
 
         # Creating graphical environment
         self.uiclsDisplay = Ui_DisplayPlots_Window()
         self.uiclsDisplay.setupUi(self)
 
-        self.uiclsDisplay.comboBox_parameter.addItems(['Paquete',
-                                                        'Tiempo',
-                                                        'Pitch',
+        self.uiclsDisplay.comboBox_parameter.addItems(['Pitch',
                                                         'Roll',
                                                         'Azimut',
                                                         'Presión',
                                                         'Temperatura',
-                                                        'Altura',
-                                                        'Satélites',
+                                                        'Altura',                                                        
                                                         'Latitud',
                                                         'Longitud',
                                                         'Altitud',
-                                                        'Velocidad',
-                                                        'Estado'])
+                                                        'Velocidad'])
 
         self.show()
 
@@ -410,7 +413,50 @@ class clsDisplay(QMainWindow):
         self.uiclsDisplay.comboBox_parameter.currentIndexChanged.connect(self.slotPlot)
 
     def slotPlot(self):
-        pass
+        if self.uiclsDisplay.comboBox_parameter.currentIndex() == 0:        # Pitch
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Pitch"], 'Ángulo Pitch', 'Tiempo [s]', 'Pitch [°]', 'bo--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 1:      # Roll
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Roll"], 'Ángulo Roll', 'Tiempo [s]', 'Roll [°]', 'gv--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 2:      # Azimut
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Azimuth"], 'Ángulo Azimut', 'Tiempo [s]', 'Azimut [°]', 'rs--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 3:      # Presión
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Presión"], 'Presión atmosférica', 'Tiempo [s]', 'Presión [Pa]', 'cp--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 4:      # Temperatura
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Temperatura"], 'Temperatura exterior', 'Tiempo [s]', 'Temperatura [°C]', 'm*--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 5:      # Altura
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Altura"], 'Altura', 'Tiempo [s]', 'Altura [m]', 'm+--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 6:      # Latitud
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Latitud"], 'Latitud', 'Tiempo [s]', 'Latitud [°]', 'bx--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 7:      # Longitud
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Longitud"], 'Longitud', 'Tiempo [s]', 'Longitud [°]', 'rD--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 8:      # Altitud
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Altitud"], 'Altitud', 'Tiempo [s]', 'Altitud [msnm]', 'kh--')
+        
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 9:      # Velocidad
+            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Velocidad"], 'Velocidad angular del rotor', 'Tiempo [s]', 'Velocidad [rpm]', 'ko--')
+
+    def mthPlotColumn(self, argmth_xdata, argmth_ydata, argmth_title, argmth_xlabel, argmth_ylabel, argmth_style):
+        self.uiclsDisplay.WG_plotarea.clearWG()
+
+        self.uiclsDisplay.WG_plotarea.setWGtitle(argmth_title)
+        self.uiclsDisplay.WG_plotarea.setWGxlabel(argmth_xlabel)
+        self.uiclsDisplay.WG_plotarea.setWGylabel(argmth_ylabel)
+
+        lb, ub = self.uiclsDisplay.WG_plotarea.ax.get_ylim()
+        self.uiclsDisplay.WG_plotarea.ax.set_yticks(numpy.linspace(0, 50, 25))
+        
+        # self.uiclsDisplay.WG_plotarea.setWGgrid(True)
+
+        self.uiclsDisplay.WG_plotarea.ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)        
+        self.uiclsDisplay.WG_plotarea.draw()        
 
     def slotCloseDisplay(self):
         self.close()
@@ -451,6 +497,7 @@ def ProcessProducer(argdef_queueProducer, argdef_COM):
                     if cnt >= 30:
                         ser.close()
                         flagserial = False
+                        print('Process Producer finished!')
                     else:
                         pass
                 else:
