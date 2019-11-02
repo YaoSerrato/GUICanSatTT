@@ -10,6 +10,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 plt.rcParams['font.size'] = 8
@@ -27,6 +29,8 @@ class Ui_DisplayPlots_Window(object):
         # centralwidget_displayplots
         self.centralwidget_displayplots = QtWidgets.QWidget(DisplayPlots_Window)
         self.WG_plotarea = CreateCanvas(parent = self.centralwidget_displayplots, width = 12.90, height = 5, dpi = 100)
+        self.WG_plotarea.setWGgrid(True)
+        self.WG_toolbar = NavigationToolbar(self.WG_plotarea, self.WG_plotarea)
         self.WG_plotarea.move(30,140)
         self.centralwidget_displayplots.setObjectName("centralwidget_displayplots")
 
