@@ -180,7 +180,7 @@ class clsDashboardWindow(QMainWindow):
         self.inst_mutex = threading.Lock()        
 
         self.inst_initflag = True
-        self.inst_timerflag = True
+        self.inst_timerflag = True        
 
         self.inst_pcknum = []
         self.inst_missiontime = []
@@ -219,8 +219,7 @@ class clsDashboardWindow(QMainWindow):
         self.uiclsDashboardWindow.pushButton_stop.clicked.connect(self.slotCloseDashboard)
         self.uiclsDashboardWindow.pushButton_continue.clicked.connect(self.slotCreateDisplay)
     
-    def slotInitializer(self):
-        self.uiclsDashboardWindow.pushButton_continue.setDisabled(False)
+    def slotInitializer(self):        
         self.uiclsDashboardWindow.pushButton_start.setDisabled(True)
         if self.inst_initflag:
             self.mthDisplay()
@@ -239,12 +238,12 @@ class clsDashboardWindow(QMainWindow):
     
     def mthDisplay(self):
         # Locking thread
-        self.inst_mutex.acquire()
+        self.inst_mutex.acquire()        
 
         # Creating timer thread for getting data from inst_queueDashboard and plotting/displaying it
         if self.inst_timerflag:
             self.inst_timerplot = threading.Timer(1.0, self.mthDisplay)
-            self.inst_timerplot.start()
+            self.inst_timerplot.start()            
         else:
             pass
 
@@ -269,8 +268,7 @@ class clsDashboardWindow(QMainWindow):
                 self.inst_state.append(dataframe[13])
 
                 dataframestr = list(map(str,dataframe))
-                self.inst_csvwriter.writerow(dataframestr)
-                # self.inst_csvfile.close()
+                self.inst_csvwriter.writerow(dataframestr)                
 
             # Displaying values in LineEdits
             self.uiclsDashboardWindow.lineEdit_dataframe.setText(str(dataframe))
@@ -289,20 +287,20 @@ class clsDashboardWindow(QMainWindow):
             self.uiclsDashboardWindow.lineEdit_rotorspeed.setText(str(self.inst_rotorspeed[-1]))
 
             # Colouring state field
-            # self.mthColourState(self.inst_state[-1])
+            self.mthColourState(self.inst_state[-1])
 
             # Plotting
             if self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 0:
-                self.mthPlot(0, 'ALtura', 'Tiempo [s]', 'Altura [m]', self.inst_missiontime, self.inst_height, 'bo--')
+                self.mthPlot(0, 'Altura', 'Tiempo [s]', 'Altura [m]', self.inst_missiontime, self.inst_height, 'bo--', 0, 500)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 1:
-                self.mthPlot(1, 'Presión barmétrica', 'Tiempo [s]', 'Presión [Pa]', self.inst_missiontime, self.inst_pressure, 'ks--')
+                self.mthPlot(1, 'Presión barmétrica', 'Tiempo [s]', 'Presión [Pa]', self.inst_missiontime, self.inst_pressure, 'ks--', 77000, 78000)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 2:
-                self.mthPlot(2, 'Temperatura exterior', 'Tiempo [s]', 'Temperatura [°C]', self.inst_missiontime, self.inst_temperature, 'r^--')
+                self.mthPlot(2, 'Temperatura exterior', 'Tiempo [s]', 'Temperatura [°C]', self.inst_missiontime, self.inst_temperature, 'r^--', 0, 60)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 3:
-                self.mthPlot(3, 'Velocidad del rotor', 'Tiempo [s]', 'Velocidad [rpm]', self.inst_missiontime, self.inst_rotorspeed, 'mp--')
+                self.mthPlot(3, 'Velocidad del rotor', 'Tiempo [s]', 'Velocidad [rpm]', self.inst_missiontime, self.inst_rotorspeed, 'mp--', 0, 500)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 4:
                 self.mthPlotOrientation(4, 'Orientación del CanSat', 'Tiempo [s]', 'Orientación [°]', self.inst_missiontime, self.inst_pitch, self.inst_roll, self.inst_azimuth)
@@ -310,21 +308,26 @@ class clsDashboardWindow(QMainWindow):
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 5:
                 self.mthPlotGPS(5, 'Posición de GPS', 'Latitud [°]', 'Longitud [°]', self.inst_latitude, self.inst_longitude, 'ko--')
             
-        except:
-            pass
+        except:            
+            print('Nothing more to plot!')
+            self.uiclsDashboardWindow.label_finished.setText("Graficación finalizada.")
+            self.uiclsDashboardWindow.pushButton_continue.setDisabled(False)
+            self.inst_csvfile.close()
+            self.inst_timerplot.cancel()
 
         self.inst_mutex.release()
-    
-    def mthPlot(self, numplot, argmth_title, argmth_xlabel, argmth_ylabel, argmth_xdata, argmth_ydata, argmth_style):
+
+    def mthPlot(self, numplot, argmth_title, argmth_xlabel, argmth_ylabel, argmth_xdata, argmth_ydata, argmth_style, argmth_ymin, argmth_ymax):
         self.inst_plotWG[numplot].clearWG()
 
         self.inst_plotWG[numplot].setWGtitle(argmth_title)
         self.inst_plotWG[numplot].setWGxlabel(argmth_xlabel)
         self.inst_plotWG[numplot].setWGylabel(argmth_ylabel)
+        self.inst_plotWG[numplot].setWGylim(argmth_ymin, argmth_ymax)
         self.inst_plotWG[numplot].setWGxlim(max(0, argmth_xdata[-1]-10), argmth_xdata[-1])
         self.inst_plotWG[numplot].setWGgrid(True)
 
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 1, markersize = 5)
         self.inst_plotWG[numplot].draw()
 
     def mthPlotOrientation(self, numplot, argmth_title, argmth_xlabel, argmth_ylabel, argmth_xdata, argmth_pitch, argmth_roll, argmth_az):
@@ -337,9 +340,9 @@ class clsDashboardWindow(QMainWindow):
         self.inst_plotWG[numplot].setWGxlim(max(0, argmth_xdata[-1]-10), argmth_xdata[-1])
         self.inst_plotWG[numplot].setWGgrid(True)
 
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_pitch, 'bo--', label = 'Pitch', linewidth = 2, markersize = 8)
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_roll, 'rs--', label = 'Roll', linewidth = 2, markersize = 8)
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_az, 'k^--', label = 'Azimuth', linewidth = 2, markersize = 8)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_pitch, 'bo--', label = 'Pitch', linewidth = 1, markersize = 5)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_roll, 'rs--', label = 'Roll', linewidth = 1, markersize = 5)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_az, 'k^--', label = 'Azimuth', linewidth = 1, markersize = 5)
         self.inst_plotWG[numplot].ax.legend()
         self.inst_plotWG[numplot].draw()
 
@@ -353,7 +356,7 @@ class clsDashboardWindow(QMainWindow):
         self.inst_plotWG[numplot].setWGylim(0, 360)
         self.inst_plotWG[numplot].setWGgrid(True)
 
-        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)
+        self.inst_plotWG[numplot].ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 1, markersize = 5)
         self.inst_plotWG[numplot].draw()
 
     def mthColourState(self, argmth_state):
@@ -366,13 +369,14 @@ class clsDashboardWindow(QMainWindow):
         if argmth_state == 1:
             self.uiclsDashboardWindow.lineEdit_state_wait.setStyleSheet('background-color: yellow')            
         elif argmth_state == 2:
-            self.uiclsDashboardWindow.lineEdit_state_ascent.setStyleSheet('background-color: yellow')
+            self.uiclsDashboardWindow.lineEdit_state_ascent.setStyleSheet('background-color: yellow')            
         elif argmth_state == 3:
-            self.uiclsDashboardWindow.lineEdit_state_parachute.setStyleSheet('background-color: yellow')
+            self.uiclsDashboardWindow.lineEdit_state_parachute.setStyleSheet('background-color: yellow')            
         elif argmth_state == 4:
-            self.uiclsDashboardWindow.lineEdit_state_autorrotation.setStyleSheet('background-color: yellow')
+            self.uiclsDashboardWindow.lineEdit_state_autorrotation.setStyleSheet('background-color: yellow')            
         elif argmth_state == 5:
             self.uiclsDashboardWindow.lineEdit_state_landing.setStyleSheet('background-color: yellow')
+            
 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------
@@ -391,6 +395,19 @@ class clsDisplay(QMainWindow):
                 for (k,v) in row.items():
                     self.csvcolumns[k].append(v)
 
+        self.inst_readTime = list(map(float, self.csvcolumns["Tiempo"]))
+
+        self.inst_readPitch = list(map(float, self.csvcolumns["Pitch"]))
+        self.inst_readRoll = list(map(float, self.csvcolumns["Roll"]))
+        self.inst_readAzimut = list(map(float, self.csvcolumns["Azimuth"]))
+        self.inst_readPressure = list(map(float, self.csvcolumns["Presión"]))
+        self.inst_readTemperature = list(map(float, self.csvcolumns["Temperatura"]))
+        self.inst_readHeight = list(map(float, self.csvcolumns["Altura"]))
+        self.inst_readLatitude = list(map(float, self.csvcolumns["Latitud"]))
+        self.inst_readLongitude = list(map(float, self.csvcolumns["Longitud"]))
+        self.inst_readAltitude = list(map(float, self.csvcolumns["Altitud"]))
+        self.inst_readSpeed = list(map(float, self.csvcolumns["Velocidad"]))        
+
         # Creating graphical environment
         self.uiclsDisplay = Ui_DisplayPlots_Window()
         self.uiclsDisplay.setupUi(self)
@@ -401,10 +418,11 @@ class clsDisplay(QMainWindow):
                                                         'Presión',
                                                         'Temperatura',
                                                         'Altura',                                                        
-                                                        'Latitud',
-                                                        'Longitud',
+                                                        'Posición GPS',                                                        
                                                         'Altitud',
                                                         'Velocidad'])
+
+        self.mthPlotColumn(self.inst_readTime, self.inst_readPitch, 'Ángulo Pitch', 'Tiempo [s]', 'Pitch [°]', 'bo-')
 
         self.show()
 
@@ -414,34 +432,31 @@ class clsDisplay(QMainWindow):
 
     def slotPlot(self):
         if self.uiclsDisplay.comboBox_parameter.currentIndex() == 0:        # Pitch
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Pitch"], 'Ángulo Pitch', 'Tiempo [s]', 'Pitch [°]', 'bo--')
+            self.mthPlotColumn(self.inst_readTime, self.inst_readPitch, 'Ángulo Pitch', 'Tiempo [s]', 'Pitch [°]', 'bo-')
         
         elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 1:      # Roll
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Roll"], 'Ángulo Roll', 'Tiempo [s]', 'Roll [°]', 'gv--')
+            self.mthPlotColumn(self.inst_readTime, self.inst_readRoll, 'Ángulo Roll', 'Tiempo [s]', 'Roll [°]', 'rs-')
         
         elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 2:      # Azimut
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Azimuth"], 'Ángulo Azimut', 'Tiempo [s]', 'Azimut [°]', 'rs--')
+            self.mthPlotColumn(self.inst_readTime, self.inst_readAzimut, 'Ángulo Azimut', 'Tiempo [s]', 'Azimut [°]', 'k^-')
         
         elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 3:      # Presión
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Presión"], 'Presión atmosférica', 'Tiempo [s]', 'Presión [Pa]', 'cp--')
+            self.mthPlotColumn(self.inst_readTime, self.inst_readPressure, 'Presión atmosférica', 'Tiempo [s]', 'Presión [Pa]', 'ks-')
         
         elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 4:      # Temperatura
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Temperatura"], 'Temperatura exterior', 'Tiempo [s]', 'Temperatura [°C]', 'm*--')
+            self.mthPlotColumn(self.inst_readTime, self.inst_readTemperature, 'Temperatura exterior', 'Tiempo [s]', 'Temperatura [°C]', 'r^-')
         
         elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 5:      # Altura
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Altura"], 'Altura', 'Tiempo [s]', 'Altura [m]', 'm+--')
+            self.mthPlotColumn(self.inst_readTime, self.inst_readHeight, 'Altura', 'Tiempo [s]', 'Altura [m]', 'bo-')
         
-        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 6:      # Latitud
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Latitud"], 'Latitud', 'Tiempo [s]', 'Latitud [°]', 'bx--')
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 6:      # Posición GPS
+            self.mthPlotColumn(self.inst_readLatitude, self.inst_readLongitude, 'Posición de GPS', 'Latitud [°]', 'Longitud [°]', 'ko--')
         
-        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 7:      # Longitud
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Longitud"], 'Longitud', 'Tiempo [s]', 'Longitud [°]', 'rD--')
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 7:      # Altitud
+            self.mthPlotColumn(self.inst_readTime, self.inst_readAltitude, 'Altitud', 'Tiempo [s]', 'Altitud [msnm]', 'kh-')
         
-        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 8:      # Altitud
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Altitud"], 'Altitud', 'Tiempo [s]', 'Altitud [msnm]', 'kh--')
-        
-        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 9:      # Velocidad
-            self.mthPlotColumn(self.csvcolumns["Paquete"], self.csvcolumns["Velocidad"], 'Velocidad angular del rotor', 'Tiempo [s]', 'Velocidad [rpm]', 'ko--')
+        elif self.uiclsDisplay.comboBox_parameter.currentIndex() == 8:      # Velocidad
+            self.mthPlotColumn(self.inst_readTime, self.inst_readSpeed, 'Velocidad angular del rotor', 'Tiempo [s]', 'Velocidad [rpm]', 'mp-')
 
     def mthPlotColumn(self, argmth_xdata, argmth_ydata, argmth_title, argmth_xlabel, argmth_ylabel, argmth_style):
         self.uiclsDisplay.WG_plotarea.clearWG()
@@ -449,16 +464,12 @@ class clsDisplay(QMainWindow):
         self.uiclsDisplay.WG_plotarea.setWGtitle(argmth_title)
         self.uiclsDisplay.WG_plotarea.setWGxlabel(argmth_xlabel)
         self.uiclsDisplay.WG_plotarea.setWGylabel(argmth_ylabel)
+        self.uiclsDisplay.WG_plotarea.setWGgrid(True)
 
-        lb, ub = self.uiclsDisplay.WG_plotarea.ax.get_ylim()
-        self.uiclsDisplay.WG_plotarea.ax.set_yticks(numpy.linspace(0, 50, 25))
-        
-        # self.uiclsDisplay.WG_plotarea.setWGgrid(True)
-
-        self.uiclsDisplay.WG_plotarea.ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 2, markersize = 8)        
+        self.uiclsDisplay.WG_plotarea.ax.plot(argmth_xdata, argmth_ydata, argmth_style, linewidth = 1, markersize = 5)        
         self.uiclsDisplay.WG_plotarea.draw()        
 
-    def slotCloseDisplay(self):
+    def slotCloseDisplay(self):        
         self.close()
 
 # ***************************************************************************************************************************************** #
