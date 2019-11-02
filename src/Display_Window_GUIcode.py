@@ -28,10 +28,10 @@ class Ui_DisplayPlots_Window(object):
 
         # centralwidget_displayplots
         self.centralwidget_displayplots = QtWidgets.QWidget(DisplayPlots_Window)
-        self.WG_plotarea = CreateCanvas(parent = self.centralwidget_displayplots, width = 12.90, height = 5, dpi = 100)
+        self.WG_plotarea = CreateCanvas(parent = self.centralwidget_displayplots, width = 12.90, height = 5.4, dpi = 100)
         self.WG_plotarea.setWGgrid(True)
         self.WG_toolbar = NavigationToolbar(self.WG_plotarea, self.WG_plotarea)
-        self.WG_plotarea.move(30,140)
+        self.WG_plotarea.move(30,110)
         self.centralwidget_displayplots.setObjectName("centralwidget_displayplots")
 
         # label_title
@@ -70,12 +70,12 @@ class Ui_DisplayPlots_Window(object):
 
         # comboBox_parameter
         self.comboBox_parameter = QtWidgets.QComboBox(self.centralwidget_displayplots)
-        self.comboBox_parameter.setGeometry(QtCore.QRect(30, 95, 221, 22))
+        self.comboBox_parameter.setGeometry(QtCore.QRect(130, 70, 221, 22))
         self.comboBox_parameter.setObjectName("comboBox_parameter")
 
         # pushButton_plot
         self.pushButton_plot = QtWidgets.QPushButton(self.centralwidget_displayplots)
-        self.pushButton_plot.setGeometry(QtCore.QRect(270, 95, 120, 23))
+        self.pushButton_plot.setGeometry(QtCore.QRect(370, 70, 120, 23))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
@@ -84,7 +84,7 @@ class Ui_DisplayPlots_Window(object):
 
         # pushButton_close
         self.pushButton_close = QtWidgets.QPushButton(self.centralwidget_displayplots)
-        self.pushButton_close.setGeometry(QtCore.QRect(1200, 95, 120, 23))
+        self.pushButton_close.setGeometry(QtCore.QRect(1200, 70, 120, 23))
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(12)
