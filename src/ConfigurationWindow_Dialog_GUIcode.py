@@ -181,6 +181,27 @@ class Ui_Dialog_ConfigurationWindow(object):
         self.pushButton_configCanSat.setFont(font)
         self.pushButton_configCanSat.setObjectName("pushButton_configCanSat")
 
+        # lineEdit_circle1
+        self.lineEdit_circle1 = QtWidgets.QLineEdit(self.frame_main)
+        self.lineEdit_circle1.setReadOnly(True)        
+        self.lineEdit_circle1.setGeometry(QtCore.QRect(180, 390, 23, 23))
+        self.lineEdit_circle1.setStyleSheet("background-color: white")
+        self.lineEdit_circle1.setObjectName("lineEdit_circle1")
+
+        # lineEdit_circle2
+        self.lineEdit_circle2 = QtWidgets.QLineEdit(self.frame_main)
+        self.lineEdit_circle2.setReadOnly(True)        
+        self.lineEdit_circle2.setGeometry(QtCore.QRect(210, 390, 23, 23))
+        self.lineEdit_circle2.setStyleSheet("background-color: white")
+        self.lineEdit_circle2.setObjectName("lineEdit_circle2")
+
+        # lineEdit_circle3
+        self.lineEdit_circle3 = QtWidgets.QLineEdit(self.frame_main)
+        self.lineEdit_circle3.setReadOnly(True)        
+        self.lineEdit_circle3.setGeometry(QtCore.QRect(240, 390, 23, 23))
+        self.lineEdit_circle3.setStyleSheet("background-color: white")
+        self.lineEdit_circle3.setObjectName("lineEdit_circle3")
+
         # Labeling GUI elements
         self.retranslateUi(Dialog_ConfigurationWindow)
         QtCore.QMetaObject.connectSlotsByName(Dialog_ConfigurationWindow)
