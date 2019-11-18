@@ -18,6 +18,8 @@ import numpy
 from multiprocessing import Queue, Process
 import threading
 
+from time import sleep
+
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication, QDialog, QStyleFactory, QFileDialog, QMessageBox, QMainWindow
 
@@ -46,11 +48,14 @@ class clsConfigurationDialog(QDialog):
 
         self.inst_msgbox = QMessageBox()
 
+        self.inst_currentCOM = ''
+
         # Creating graphical environment
         self.uiclsConfigurationDialog = Ui_Dialog_ConfigurationWindow()
         self.uiclsConfigurationDialog.setupUi(self)        
 
-        self.uiclsConfigurationDialog.pushButton_accept.setDisabled(True)
+        self.uiclsConfigurationDialog.pushButton_configCanSat.setDisabled(True)
+        self.uiclsConfigurationDialog.pushButton_accept.setDisabled(False)
         
         self.show()
 
@@ -71,12 +76,9 @@ class clsConfigurationDialog(QDialog):
             self.inst_msgbox.setText("No hay puerto COM seleccionado.")
             self.inst_msgbox.setInformativeText('')
             self.inst_msgbox.exec_()
-        else:            
-            # Here I call an instance from the class related to the initial commands sent to CanSat            
-            self.uiclsConfigurationDialog.pushButton_accept.setDisabled(False)
-            self.uiclsConfigurationDialog.pushButton_configCanSat.setDisabled(True)
-
-        # self.ui.pushButton_accept.setDisabled(False)
+        else:
+            self.inst_currentCOM = self.uiclsConfigurationDialog.comboBox_COMport.currentText()
+            self.mthSequenceCommands(self.inst_currentCOM)        
 
     def slotCloseWindow(self):
         self.close()
@@ -123,8 +125,9 @@ class clsConfigurationDialog(QDialog):
             self.inst_msgbox.setInformativeText('Campos faltantes: \n' + self.inst_flagfilename*' -Nombre de archivo\n' + self.inst_flagdirectory*' -Directorio\n' + self.inst_flagCOM*' -Puerto COM')
             self.inst_msgbox.exec_()
         else:
+            self.mthStartMission(self.uiclsConfigurationDialog.comboBox_COMport.currentText())
             self.inst_pathcsv = self.inst_pathdir + '/' + self.uiclsConfigurationDialog.lineEdit_filename.text() + '.csv'
-            self.close()
+            self.close()            
             extdefCreateProcesses(self.uiclsConfigurationDialog.comboBox_COMport.currentText(), self.inst_pathcsv)            
 
     def mthSearchPorts(self):
@@ -146,10 +149,100 @@ class clsConfigurationDialog(QDialog):
             except (OSError, serial.SerialException):
                 pass
 
+    def mthSequenceCommands(self, argcls_portCOM):
+        ser = serial.Serial(argcls_portCOM, 115200, timeout = 10)
+        semaforo = []
+        flagG = False
+        flagA = False
+        flagS = False
+
+        try:                         
+            cmd = "M,G,123456"
+            ser.write(cmd.encode())
+            readcansat = ser.read(1).decode('UTF-8')
+            print(readcansat)
+            semaforo.append(readcansat)
+            if(readcansat == "O"):
+                flagG = True
+                self.lineEdit_circle1.setStyleSheet("background-color: blue")
+            else:
+                self.lineEdit_circle1.setStyleSheet("background-color: red")
+
+            sleep(1)
+            cmd = "M,A,123456"            
+            ser.write(cmd.encode())
+            readcansat = ser.read(1).decode('UTF-8')
+            print(readcansat)
+            semaforo.append(readcansat)
+            if(readcansat == "O"):
+                flagA = True
+                self.lineEdit_circle2.setStyleSheet("background-color: blue")
+            else:
+                self.lineEdit_circle2.setStyleSheet("background-color: red")
+               
+            sleep(1)
+            cmd = "M,S,123456"            
+            ser.write(cmd.encode())
+            readcansat = ser.read(1).decode('UTF-8')
+            print(readcansat)
+            semaforo.append(readcansat)
+            if(readcansat == "O"):
+                flagS = True
+                self.lineEdit_circle3.setStyleSheet("background-color: blue")
+            else:
+                self.lineEdit_circle3.setStyleSheet("background-color: red")
+
+            # sleep(1)
+            # cmd = "B,1,123456"            
+            # ser.write(cmd.encode())
+            # readcansat = ser.read(1).decode('UTF-8')
+            # print(readcansat)
+            # semaforo.append(readcansat)                            
+
+            ser.close()
+
+        except serial.SerialException:
+            # There is no new data from serial port
+            ser.close()
+
+        print(semaforo)
+
+        if(flagG and flagA and flagS):
+            self.uiclsConfigurationDialog.pushButton_accept.setDisabled(False)
+            self.uiclsConfigurationDialog.pushButton_configCanSat.setDisabled(True)
+
+            self.inst_msgbox.setIcon(QMessageBox.Information)
+            self.inst_msgbox.setText("¡Configuración terminada!")
+            self.inst_msgbox.setWindowTitle("Terminado") 
+            self.inst_msgbox.setInformativeText('La configuración del CanSat ha sido exitosa.')
+            self.inst_msgbox.exec_()
+        else:
+            self.inst_msgbox.setIcon(QMessageBox.Information)
+            self.inst_msgbox.setText("¡Error de configuración!")
+            self.inst_msgbox.setWindowTitle("Error") 
+            self.inst_msgbox.setInformativeText('Error al configurar el CanSat.')
+            self.inst_msgbox.exec_()
+
+
+    def mthStartMission(self, argcls_portCOM):
+        ser = serial.Serial(argcls_portCOM, 115200, timeout = 10)
+
+        try:                         
+            cmd = "B,S,123456"
+            ser.write(cmd.encode())
+            readcansat = ser.read(1).decode('UTF-8')
+            print(readcansat)
+
+            ser.close()
+
+        except serial.SerialException:
+            # There is no new data from serial port
+            ser.close()
+
+
 # External methods called in clsConfigurationDialog class
 def extdefCreateProcesses(argdef_COMport, argdef_pathcsv):
-    queue_data = Queue()
-    queue_killer = Queue()
+    queue_data = Queue()    
 
     # Creating Plotter Process
     process_plotter = Process(target = ProcessPlotter, name = 'process_plotter', args = (queue_data, argdef_pathcsv))
@@ -261,8 +354,10 @@ class clsDashboardWindow(QMainWindow):
                 self.inst_temperature.append(dataframe[6])
                 self.inst_height.append(dataframe[7])
                 self.inst_numsat.append(dataframe[8])
-                self.inst_latitude.append(dataframe[9])
-                self.inst_longitude.append(dataframe[10])
+                self.inst_latitude.append(int(dataframe[9]/100))
+                # self.inst_latitude.append(dataframe[9])
+                self.inst_longitude.append(int(dataframe[10]/100))
+                # self.inst_longitude.append(dataframe[10])
                 self.inst_altitude.append(dataframe[11])
                 self.inst_rotorspeed.append(dataframe[12])
                 self.inst_state.append(dataframe[13])
@@ -291,19 +386,19 @@ class clsDashboardWindow(QMainWindow):
 
             # Plotting
             if self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 0:
-                self.mthPlot(0, 'Altura', 'Tiempo [s]', 'Altura [m]', self.inst_missiontime, self.inst_height, 'bo--', 0, 500)
+                self.mthPlot(0, 'Altura', 'Tiempo [s]', 'Altura [m]', self.inst_pcknum, self.inst_height, 'bo--', -10, 500)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 1:
-                self.mthPlot(1, 'Presión barmétrica', 'Tiempo [s]', 'Presión [Pa]', self.inst_missiontime, self.inst_pressure, 'ks--', 77000, 78000)
+                self.mthPlot(1, 'Presión barmétrica', 'Tiempo [s]', 'Presión [Pa]', self.inst_pcknum, self.inst_pressure, 'ks--', 77900, 78300)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 2:
-                self.mthPlot(2, 'Temperatura exterior', 'Tiempo [s]', 'Temperatura [°C]', self.inst_missiontime, self.inst_temperature, 'r^--', 0, 60)
+                self.mthPlot(2, 'Temperatura exterior', 'Tiempo [s]', 'Temperatura [°C]', self.inst_pcknum, self.inst_temperature, 'r^--', 0, 60)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 3:
-                self.mthPlot(3, 'Velocidad del rotor', 'Tiempo [s]', 'Velocidad [rpm]', self.inst_missiontime, self.inst_rotorspeed, 'mp--', 0, 500)
+                self.mthPlot(3, 'Velocidad del rotor', 'Tiempo [s]', 'Velocidad [rpm]', self.inst_pcknum, self.inst_rotorspeed, 'mp--', 0, 500)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 4:
-                self.mthPlotOrientation(4, 'Orientación del CanSat', 'Tiempo [s]', 'Orientación [°]', self.inst_missiontime, self.inst_pitch, self.inst_roll, self.inst_azimuth)
+                self.mthPlotOrientation(4, 'Orientación del CanSat', 'Tiempo [s]', 'Orientación [°]', self.inst_pcknum, self.inst_pitch, self.inst_roll, self.inst_azimuth)
 
             elif self.uiclsDashboardWindow.tabWidget_plots.currentIndex() == 5:
                 self.mthPlotGPS(5, 'Posición de GPS', 'Latitud [°]', 'Longitud [°]', self.inst_latitude, self.inst_longitude, 'ko--')
@@ -378,7 +473,6 @@ class clsDashboardWindow(QMainWindow):
             self.uiclsDashboardWindow.lineEdit_state_landing.setStyleSheet('background-color: yellow')
             
 
-
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # Display class
 
@@ -395,7 +489,7 @@ class clsDisplay(QMainWindow):
                 for (k,v) in row.items():
                     self.csvcolumns[k].append(v)
 
-        self.inst_readTime = list(map(float, self.csvcolumns["Tiempo"]))
+        self.inst_readTime = list(map(float, self.csvcolumns["Paquete"]))
 
         self.inst_readPitch = list(map(float, self.csvcolumns["Pitch"]))
         self.inst_readRoll = list(map(float, self.csvcolumns["Roll"]))
@@ -488,7 +582,7 @@ def ProcessPlotter(argdef_queuePlotter, argdef_CSV):
 # Producer
 def ProcessProducer(argdef_queueProducer, argdef_COM):
 
-    ser = serial.Serial(argdef_COM, 9600, timeout = 1)
+    ser = serial.Serial(argdef_COM, 115200, timeout = 1)
     flagserial = True
     cnt = 0
 
