@@ -72,7 +72,7 @@ class clsConfigurationDialog(QDialog):
     def slotConfigureCanSat(self):
         if self.uiclsConfigurationDialog.comboBox_COMport.currentIndex() == 0:            
             self.inst_msgbox.setIcon(QMessageBox.Warning)
-            self.inst_msgbox.setWindowTitle("Error puerto COM")
+            self.inst_msgbox.setWindowTitle("Error en puerto COM")
             self.inst_msgbox.setText("No hay puerto COM seleccionado.")
             self.inst_msgbox.setInformativeText('')
             self.inst_msgbox.exec_()
