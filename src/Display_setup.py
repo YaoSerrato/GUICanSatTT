@@ -6,6 +6,7 @@
 # Comment done on develop branch.
 # $Id$
 # Another random comment.
+# Random content again and again.
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
