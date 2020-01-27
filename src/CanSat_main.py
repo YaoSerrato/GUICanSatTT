@@ -294,7 +294,7 @@ class clsDashboardWindow(QMainWindow):
         self.inst_rotorspeed = []
         self.inst_state = []
 
-        # Creating graphical environment
+        # Creating graphical environment environment.
         self.uiclsDashboardWindow = Ui_Window_Dashboard()
         self.uiclsDashboardWindow.setupUi(self)        
 
