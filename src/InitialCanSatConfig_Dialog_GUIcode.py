@@ -3,6 +3,7 @@
 # Form implementation generated from reading ui file 'ConfigCanSatDialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
+# This is a comment made from origin.
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
