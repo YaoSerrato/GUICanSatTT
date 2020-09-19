@@ -70,3 +70,13 @@ un diagrama de este esquema de multiprocesos.
   </p>
   
   
+   ## Créditos
+La interfaz de este repositorio fue desarrollada como parte del proyecto para obtener el grado de licenciatura en la carrera de ingeniería mecatrónica. El crédito va para los
+tres alumnos que participamos en este proyecto:
+
+  - Aldo Bonilla Rodríguez
+  - Saúl Becerril Ortega
+  - Rodrigo Yaoctzin Serrato Andrade
+
+  
+  
